@@ -7,7 +7,7 @@
 using namespace std;
 
 template<typename T>
-class LinkedList: public LinkedListInterface {
+class LinkedList: public LinkedListInterface() {
 
 public:
     LinkedList() {}

@@ -5,6 +5,13 @@
 
 using namespace std;
 
+LinkedList::LinkedList () {
+        head = NULL;
+        length = 0;
+}
+LinkedList::~LinkedList() {
+    cout << "The linked list deconstructor was called" << endl;
+}
 void LinkedList::insertHead(T value) {
     
 }
