@@ -1,0 +1,4 @@
+insertHead 1
+insertTail 2
+insertAfter 3 2
+size 3
