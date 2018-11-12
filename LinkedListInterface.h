@@ -21,7 +21,7 @@ public:
 	Do not allow duplicate values in the list.
 	*/
 	virtual void insertHead(T value) = 0;
-
+	
 	/*
 	insertTail
 
@@ -41,7 +41,6 @@ public:
 	insertionNode is in the list. Do not allow duplicate values in the list.
 	*/
 	virtual void insertAfter(T value, T insertionNode) = 0;
-
 	/*
 	remove
 

@@ -1,8 +1,8 @@
 size 0
 printList
   
-at 0 
-at 1 
+at 0 out_of_range
+at 1 out_of_range
 insertTail lazy
 size 1
 printList
@@ -62,14 +62,14 @@ printList
 size 9
 printList
   The quick brown fox jumps over the lazy dog.
-at 0 
-at 1 
-at 2 
-at 3 
-at 4 
-at 5 
-at 6 
-at 7 
-at 8 
-at 9 
-at -1 
+at 0 The
+at 1 quick
+at 2 brown
+at 3 fox
+at 4 jumps
+at 5 over
+at 6 the
+at 7 lazy
+at 8 dog.
+at 9 out_of_range
+at -1 out_of_range

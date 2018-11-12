@@ -2,9 +2,10 @@
 #define LINKEDLIST_H
 
 #include "LinkedListInterface.h"
-#include <stdio.h>
 #include <iostream>
 #include <string>
+#include <sstream>
+#include <stdexcept>
 
 using namespace std;
 
@@ -17,6 +18,7 @@ public:
         length = 0;
     }
 	~LinkedList() {
+		clear();
 		cout << "The linked list deconstructor was called" << endl;
 	}
 	
@@ -24,9 +26,9 @@ public:
     	T value;
     	Node *next; //integer that points to a new thing which is the same type as me
     	
-    	Node(T val) {
+    	Node(T val, Node* n = NULL) {
         	value = val;
-        	next = NULL;
+        	next = n;
     	}
 	};
 	bool isDuplicate(T value) {
@@ -60,72 +62,57 @@ public:
 		}
 		cout << "in insertTail" << endl;
 		if (head == NULL) {
-            head = new Node(value);
-            length++;
+            insertHead(value);
+            return;
         }
-        //case 2: otherwise
-        else {
-            Node *cur = head; //pointer to a Node. Local variable.
-            for (int i = 0; i < length-1; i++) {
-            	if (cur->next == NULL) {
-            		break;
-            	}
-                cur = cur->next;//current pointer is now at whatever it was pointing to and pointing to the next. Eventually points to last item
-            }
-            cur->next = new Node(value);
-            length++;
+        Node *cur = head; //pointer to a Node. Local variable.
+        while (cur->next != NULL) {
+        	cur = cur->next;	
+        }
+        if (cur->next == NULL) {
+        	Node* newNode = new Node(value);
+        	cur->next = newNode;
+        	newNode->next = NULL;
         }
 	}
 	void insertAfter(T value, T insertionNode) { 
 		if (isDuplicate(value)) {
 			return;
 		}
-		if (head == NULL) {
-			head = new Node(value);
-    		length++;
-    		cout << "NULL head" << endl;
-		}
-		else {
-			Node *cur = head;
-			if (find(insertionNode) == true) {
-				while (cur != NULL) {
-	            	if (cur->value == insertionNode) {
-	            		Node *beta = new Node(value);
-				    	beta->next = cur->next;
-				    	cur->next = beta;
-				    	length++;
-	            	}
-	            	cur = cur->next;
-				}
-			}
-			else {
-				cout << "cant insert" << endl;
-			}
+		Node* cur = head;
+		while (cur != NULL) {
+	        if (cur->value == insertionNode) {
+	            Node *beta = new Node(value);
+				beta->next = cur->next;
+				cur->next = beta;
+				length++;
+	        }
+	    	cur = cur->next;
 		}
 	}
 	void remove(T value) {
+		Node* cur = head;
+    	Node* goner = head;
 		if (index >= length) {
-	        cout << "index out of range" << endl;
 	        return;
 	    }
-	    if (index == 0) { //deleting something at head
-	        Node *head2 = head;
-	        head = head->next;
-	        delete head2;
-	        length--;
+	    if (length == 0) {
+	    	return;
 	    }
-	    else if (index == length-1) { //deleting last item
-	            
+	    if (head->value == value) {
+	    	head = cur->next;
+	    	delete cur;
+	    	return;
 	    }
-	    else { //deleting something from the middle
-	        Node *cur = head;
-	        for (int i = 0; i < index-1; i++) {
-	            cur = cur->next;
-	        }
-	        Node *goner = cur->next;
-	        cur->next = cur->next->next;
-	        delete goner;
-	        length--;
+	    while(cur->next != NULL) {
+	    	if (cur->next->value == value) {
+	    		goner = cur->next;
+	    		cur->next = goner->next;
+	    		goner->next = NULL;
+	    		delete goner;
+	    		return;
+	    	}
+	    	cur = cur->next;
 	    }
 	}
 	void clear() {
@@ -139,7 +126,7 @@ public:
 		if (index >= length || index < 0) {
 			cout << "This is out of range" << endl;
 			throw out_of_range("index out of range");
-			return NULL;
+			return 0;
 		}
 		else {
 			Node* atNode = head;
@@ -154,7 +141,12 @@ public:
 		}
 	}
 	int size() {
-		cout << "the size" << length << endl;
+		Node* n = head;
+		length = 0; 
+		while (n != NULL) {
+			n = n->next;
+			length++;
+		}
 		return length;
 	}
 	
