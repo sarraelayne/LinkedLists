@@ -84,6 +84,9 @@ public:
 	For example, a LinkedList containing the value 1, 2, 3, 4, and 5 should return
 	"1 2 3 4 5"
 	*/
+	
 	virtual string toString() = 0;
+	
+	virtual bool find(T insertionNode) = 0;
 
 };

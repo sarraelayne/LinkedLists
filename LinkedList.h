@@ -23,17 +23,42 @@ public:
 	struct Node { //KIND OF LIKE A CLASS (BABY CLASS) CAN USE ABOVE CODE. EVERYTHING IS PUBLIC IN A STRUCT
     	T value;
     	Node *next; //integer that points to a new thing which is the same type as me
-    
+    	
     	Node(T val) {
         	value = val;
         	next = NULL;
     	}
 	};
+	bool isDuplicate(T value) {
+		Node* duplicate = head;
+		while (duplicate != NULL) {
+			if (duplicate->value == value) {
+				return true;
+			}
+			duplicate = duplicate->next;
+		}
+		return false;
+	}
 	void insertHead(T value) {
-		head = new Node(value);
-    	length++;
+		if (isDuplicate(value)) {
+			return;
+		}
+		if(head == NULL) {
+			head = new Node(value);
+			length++;
+		}
+		else {
+			Node *beta = new Node(value);
+			beta->next = head;
+			head = beta;
+			length++;
+		}
 	}
 	void insertTail(T value){
+		if (isDuplicate(value)) {
+			return;
+		}
+		cout << "in insertTail" << endl;
 		if (head == NULL) {
             head = new Node(value);
             length++;
@@ -42,13 +67,19 @@ public:
         else {
             Node *cur = head; //pointer to a Node. Local variable.
             for (int i = 0; i < length-1; i++) {
-                cur = cur->next; //current pointer is now at whatever it was pointing to and pointing to the next. Eventually points to last item
+            	if (cur->next == NULL) {
+            		break;
+            	}
+                cur = cur->next;//current pointer is now at whatever it was pointing to and pointing to the next. Eventually points to last item
             }
             cur->next = new Node(value);
             length++;
         }
 	}
-	void insertAfter(T value, T insertionNode) {
+	void insertAfter(T value, T insertionNode) { 
+		if (isDuplicate(value)) {
+			return;
+		}
 		if (head == NULL) {
 			head = new Node(value);
     		length++;
@@ -56,20 +87,21 @@ public:
 		}
 		else {
 			Node *cur = head;
-			cout << "head" << head << endl;
-			find(insertionNode);
-			cout << "index: " << index << endl;
-		    for (int i = 0; i < index-1; i++) {
-		    	cout << "yay" << endl;
-		        cur = cur->next;
-		        cout << "boo" << endl;
-		    }
-		    Node *beta = new Node(value);
-		    beta->next = cur->next;
-		    cur->next = beta;
-		    length++;
+			if (find(insertionNode) == true) {
+				while (cur != NULL) {
+	            	if (cur->value == insertionNode) {
+	            		Node *beta = new Node(value);
+				    	beta->next = cur->next;
+				    	cur->next = beta;
+				    	length++;
+	            	}
+	            	cur = cur->next;
+				}
+			}
+			else {
+				cout << "cant insert" << endl;
+			}
 		}
-		
 	}
 	void remove(T value) {
 		if (index >= length) {
@@ -97,23 +129,48 @@ public:
 	    }
 	}
 	void clear() {
-		
+		while(head != NULL) {
+			Node* clearNode = head->next;
+			delete head;
+			head = clearNode;
+		}
 	}
 	T at(int index) {
-		if (index >= length) {
+		if (index >= length || index < 0) {
 			cout << "This is out of range" << endl;
+			throw out_of_range("index out of range");
+			return NULL;
+		}
+		else {
+			Node* atNode = head;
+			int i = 0;
+			while (atNode != NULL) {
+				if (i == index) {
+					return atNode->value;
+				}
+				i++;
+				atNode = atNode->next;
+			}
 		}
 	}
 	int size() {
+		cout << "the size" << length << endl;
 		return length;
 	}
+	
 	string toString() {
+		stringstream ss;
 		Node *cur = head;
 	    while (cur != NULL) {
-	        cout << cur->value << " ";
+	    	if(cur->next != NULL) {
+	        ss << cur->value << " ";
+	    	}
+	    	else {
+	    		ss << cur->value;
+	    	}
 	        cur = cur->next;
 	    }
-	    cout << endl;
+	    return ss.str();
 	}
 	bool find(T insertionNode) {
 		Node *cur = head;
